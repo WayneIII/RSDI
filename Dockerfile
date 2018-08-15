@@ -1,97 +1,55 @@
-FROM tensorflow/tensorflow:1.6.0-gpu-py3
+FROM nvidia/cuda:9.1-cudnn7-runtime-ubuntu16.04
 
-MAINTAINER acton <whenyd@126.com>
+MAINTAINER wayne <wangxu@china-tiantu.com>
 
-ADD . /freegis
 
-RUN sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
-RUN apt-get update
+#For miniconda
+RUN apt-get update --fix-missing && \
+    apt-get install -y wget bzip2 ca-certificates curl git
 
-# Install Pytorch
-# RUN pip install http://download.pytorch.org/whl/cu80/torch-0.3.1-cp35-cp35m-linux_x86_64.whl \
-RUN pip install /freegis/torch-0.3.1-cp35-cp35m-linux_x86_64.whl \
-    pip install -i https://pypi.douban.com/simple torchvision
+#install miniconda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc
+
+#install z.sh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &&\
+    cp -f .zshrc ~
+
+#install GDAL
+RUN conda install -c conda-forge gdal=2.3.1
+
+#install tensorflow
+RUN pip install --ignore-installed --upgrade \
+https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.10.0-cp36-cp36m-linux_x86_64.whl
+
 
 # Core linux dependencies. 
-RUN apt-get install -y \
+RUN apt-get update --fix-missing && \
+    apt-get install -y \
     # developer tools
     build-essential \
+    vim \
     cmake \
     git \
     wget \
     unzip \
     yasm \
     pkg-config \
-    # image formats support
-    libtbb2 \
-    libtbb-dev \
-    libjpeg-dev \
-    libpng-dev \
-    libtiff-dev \
-    libjasper-dev \
-    libhdf5-dev \
-    # video formats support
-    libavcodec-dev \
-    libavformat-dev \
-    libswscale-dev \
-    libv4l-dev \
-    libxvidcore-dev \
-    libx264-dev
+    libsm6 \
+    libxrender1 \
+    libxext-dev \
+    tree \
+    htop \
+    ranger \
+    mc
 
-# Python dependencies
-RUN pip --no-cache-dir install \
-    -i https://pypi.douban.com/simple \
-    tqdm \
-    numpy \
-    hdf5storage \
-    h5py \
-    scipy \
-    py3nvml \
-    keras \
-    jupyterlab \
-    Pillow \
-    shapely \
-    geojson \
-    geopandas \
-    tifffile \
-    rasterio \
-    rasterstats
+#
+RUN pip install -r requirements.txt
 
-WORKDIR /
-
-RUN wget https://github.com/opencv/opencv_contrib/archive/3.4.1.zip \
-    && unzip 3.4.1.zip \
-    && rm 3.4.1.zip
-
-RUN wget https://github.com/opencv/opencv/archive/3.4.1.zip \
-    && unzip 3.4.1.zip \
-    && mkdir /opencv-3.4.1/build \
-    && cd /opencv-3.4.1/build \
-    && cmake -DBUILD_TIFF=ON \
-    -DBUILD_opencv_java=OFF \
-    -DOPENCV_EXTRA_MODULES_PATH=/opencv_contrib-3.4.1/modules \
-    -DWITH_CUDA=OFF \
-    -DENABLE_AVX=ON \
-    -DWITH_OPENGL=ON \
-    -DWITH_OPENCL=ON \
-    # cannot download ippicv
-    -DWITH_IPP=OFF \
-    -DWITH_TBB=ON \
-    -DWITH_EIGEN=ON \
-    -DWITH_V4L=ON \
-    -DBUILD_TESTS=OFF \
-    -DBUILD_PERF_TESTS=OFF \
-    -DCMAKE_BUILD_TYPE=RELEASE \
-    -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
-    -DPYTHON_EXECUTABLE=$(which python) \
-    -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())") \
-    -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())") .. \
-    && make install \
-    && rm /3.4.1.zip \
-    && rm -r /opencv-3.4.1 \
-    && ldconfig
-
-# Clean-up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-CMD ["/bin/bash"]
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
