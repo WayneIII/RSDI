@@ -16,9 +16,6 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-#install z.sh
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" &&\
-    cp -f .zshrc ~
 
 #install GDAL
 RUN conda install -c conda-forge gdal=2.3.1
@@ -46,7 +43,12 @@ RUN apt-get update --fix-missing && \
     tree \
     htop \
     ranger \
+    zsh \
     mc
+
+#install z.sh
+RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" &&\
+    cp -f .zshrc ~
 
 #
 RUN pip install -r requirements.txt
