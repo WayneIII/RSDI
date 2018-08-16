@@ -3,7 +3,8 @@ FROM tensorflow/tensorflow:1.9.0-gpu-py3
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
 # Install the GDAL.
-RUN build.sh
+ADD . /usr/local/src/gdal-docker/
+RUN /usr/local/src/gdal-docker/build.sh
 
 # Core linux dependencies. 
 RUN apt-get update --fix-missing && \
