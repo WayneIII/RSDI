@@ -1,5 +1,5 @@
 tqdm==4.24.0
-keras-tqdm 2.0.1
+keras-tqdm==2.0.1
 uuid==1.30
 pytest==3.7.1
 joblib==0.12.2
