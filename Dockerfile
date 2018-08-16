@@ -16,7 +16,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN source ~/.bashrc
+RUN source $HOME/.bashrc
 
 #install GDAL
 RUN conda install -c conda-forge gdal==2.3.1
