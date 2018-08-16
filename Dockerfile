@@ -2,6 +2,8 @@ FROM nvidia/cuda:9.1-cudnn7-runtime-ubuntu16.04
 
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
+RUN chsh -s /bin/bash
+
 
 #For miniconda
 RUN apt-get update --fix-missing && \
@@ -16,7 +18,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN /bin/bash -c source $HOME/.bashrc
+RUN source $HOME/.bashrc
 
 #install GDAL
 RUN conda install -c conda-forge gdal==2.3.1
@@ -50,6 +52,10 @@ RUN apt-get update --fix-missing && \
 #install z.sh
 RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 COPY -f .zshrc /root/
+
+#install plugin of zsh
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
 #install package
 RUN pip install -r requirements.txt
