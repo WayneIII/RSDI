@@ -6,6 +6,10 @@ MAINTAINER wayne <wangxu@china-tiantu.com>
 ADD . /usr/local/src/gdal-docker/
 RUN /usr/local/src/gdal-docker/build.sh
 
+# Externally accessible data is by default put in /data
+WORKDIR /data
+VOLUME ["/data"]
+
 # Core linux dependencies. 
 RUN apt-get update --fix-missing && \
     apt-get install -y \
