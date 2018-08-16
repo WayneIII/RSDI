@@ -2,13 +2,8 @@ FROM tensorflow/tensorflow:1.9.0-gpu-py3
 
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
-# Install the application.
-ADD . /OnTensorFlow/
-RUN /OnTensorFlow/build.sh
-
-# Externally accessible data is by default put in /data
-WORKDIR /data
-VOLUME ["/data"]
+# Install the GDAL.
+RUN build.sh
 
 # Core linux dependencies. 
 RUN apt-get update --fix-missing && \
@@ -31,15 +26,15 @@ RUN apt-get update --fix-missing && \
     zsh \
     mc
 
-#install z.sh
+#install z.sh.
 RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 COPY -f .zshrc /root/
 
-#install plugin of zsh
+#install plugin of zsh.
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-#install package
+#install package.
 RUN pip install -r requirements.txt
 
 RUN apt-get clean && \
