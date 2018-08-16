@@ -4,7 +4,7 @@ MAINTAINER wayne <wangxu@china-tiantu.com>
 
 
 #install GDAL
-RUN conda install -c conda-forge gdal==2.3.1
+#RUN conda install -c conda-forge gdal==2.3.1
 
 #install tensorflow_gpu 1.10.0
 RUN pip install --ignore-installed --upgrade \
