@@ -16,10 +16,10 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
+RUN source ~/.bashrc
 
 #install GDAL
-RUN source ~/.bashrc && \
-    conda install -c conda-forge gdal==2.3.1
+RUN conda install -c conda-forge gdal==2.3.1
 
 #install tensorflow_gpu 1.10.0
 RUN pip install --ignore-installed --upgrade \
