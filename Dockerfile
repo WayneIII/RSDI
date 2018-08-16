@@ -2,9 +2,6 @@ FROM nvidia/cuda:9.1-cudnn7-runtime-ubuntu16.04
 
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
-RUN chsh -s /bin/bash
-
-
 #For miniconda
 RUN apt-get update --fix-missing && \
     apt-get install -y wget bzip2 ca-certificates curl git
@@ -18,7 +15,8 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN source $HOME/.bashrc
+RUN /bin/bash && \
+    source $HOME/.bashrc
 
 #install GDAL
 RUN conda install -c conda-forge gdal==2.3.1
