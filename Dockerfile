@@ -14,14 +14,14 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_
     /opt/conda/bin/conda clean -tipsy && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc && \
-    source ~/.bashrc
+    echo "conda activate base" >> ~/.bashrc
 
 
 #install GDAL
-RUN conda install -c conda-forge gdal==2.3.1
+RUN source ~/.bashrc && \
+    conda install -c conda-forge gdal==2.3.1
 
-#install tensorflow
+#install tensorflow_gpu 1.10.0
 RUN pip install --ignore-installed --upgrade \
 https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.10.0-cp36-cp36m-linux_x86_64.whl
 
@@ -48,10 +48,10 @@ RUN apt-get update --fix-missing && \
     mc
 
 #install z.sh
-RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" &&\
-    cp -f .zshrc ~
+RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+COPY -f .zshrc /root/
 
-#
+#install package
 RUN pip install -r requirements.txt
 
 RUN apt-get clean && \
