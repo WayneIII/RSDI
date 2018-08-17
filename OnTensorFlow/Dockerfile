@@ -3,8 +3,8 @@ FROM tensorflow/tensorflow:1.9.0-gpu-py3
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
 # Install the GDAL.
-ADD . /OnTensorFlow/
-RUN /OnTensorFlow/build.sh
+ADD /OnTensorFlow /GDAL/
+RUN /GDAL/build.sh
 
 # Externally accessible data is by default put in /data
 WORKDIR /data
@@ -33,7 +33,7 @@ RUN apt-get update --fix-missing && \
 
 #install z.sh.
 RUN sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
-COPY -f .zshrc /root/
+ADD .zshrc /root/
 
 #install plugin of zsh.
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
