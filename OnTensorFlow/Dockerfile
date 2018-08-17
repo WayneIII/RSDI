@@ -3,7 +3,8 @@ FROM tensorflow/tensorflow:1.9.0-gpu-py3
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
 # Install the GDAL.
-RUN build.sh
+ADD . /OnTensorFlow/
+RUN /OnTensorFlow/build.sh
 
 # Externally accessible data is by default put in /data
 WORKDIR /data
