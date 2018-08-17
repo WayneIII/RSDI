@@ -3,7 +3,7 @@ FROM tensorflow/tensorflow:1.9.0-gpu-py3
 MAINTAINER wayne <wangxu@china-tiantu.com>
 
 # Install the GDAL.
-ADD /OnTensorFlow /GDAL/
+ADD /OnTensorFlow/ /GDAL/
 RUN /GDAL/build.sh
 
 # Externally accessible data is by default put in /data
