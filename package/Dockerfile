@@ -15,7 +15,6 @@ https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.10.0-cp36-c
 # Core linux dependencies. 
 RUN apt-get update --fix-missing && \
     apt-get install -y \
-    # developer tools
     build-essential \
     vim \
     cmake \
